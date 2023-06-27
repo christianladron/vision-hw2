@@ -376,6 +376,7 @@ void test_cornerness()
     image s = structure_matrix(im, 2);
     image c = cornerness_response(s);
     feature_normalize2(c);
+    save_image(c, "miresponse");
     image gt = load_image("figs/response.png");
     TEST(same_image(c, gt));
     free_image(im);
