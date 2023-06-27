@@ -350,6 +350,10 @@ image *sobel_image(image im)
         set_pixel(impo[1], i, j, 0, angle);
       }
     }
+    free_image(gx);
+    free_image(gy);
+    free_image(x);
+    free_image(y);
     /*feature_normalize(x);*/
     /*feature_normalize(y);*/
     /*save_image(x, "ladegx");*/
@@ -375,5 +379,6 @@ image colorize_sobel(image im)
         }
       }
     hsv_to_rgb(res);
+    free_image(*sobel);
     return res;
 }

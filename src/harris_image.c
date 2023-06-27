@@ -85,15 +85,15 @@ void mark_corners(image im, descriptor *d, int n)
 image make_1d_gaussian(float sigma)
 {
     float dobsigmasq = 2 * pow(sigma , 2);
-    float denom = M_PI * dobsigmasq;
+    float denom = sqrt(M_PI * dobsigmasq);
     int w = 2 * ( (int) ceil(3 * sigma)) + 1;
-    image filter = make_image(w,1,1);
+    image filter = make_image(1,w,1);
     int offset = w / 2;
     for(int i = 0; i < w; i++){
         int x = i - offset;
         float exparg = - (pow(x, 2)) / dobsigmasq;
         float val = exp(exparg) / denom;
-        set_pixel(filter, i, 0, 0, val);
+        set_pixel(filter, 0, i, 0, val);
     }
     return filter;
 }
@@ -114,9 +114,11 @@ image smooth_image(image im, float sigma)
         // If you implement, disable the above if check.
         image f1d = make_1d_gaussian(sigma);
         image horizsmoth = convolve_image(im, f1d, 1);
-        f1d.h = f1d.w;
-        f1d.w= 1;
+        f1d.w = f1d.h;
+        f1d.h= 1;
         image s = convolve_image(horizsmoth, f1d, 1);
+        free_image(f1d);
+        free_image(horizsmoth);
         return s;
     }
 }
@@ -150,6 +152,11 @@ image structure_matrix(image im, float sigma)
     /*image gaussian = make_gaussian_filter(sigma);*/
     /*image S = convolve_image(gs, gaussian, 1);*/
     image S = smooth_image(gs, sigma);
+    free_image(gs);
+    free_image(gx_filter);
+    free_image(gy_filter);
+    free_image(gx);
+    free_image(gy);
 
     // TODO: calculate structure matrix for im.
     return S;
@@ -243,21 +250,9 @@ descriptor *harris_corner_detector(image im, float sigma, float thresh, int nms,
 
     // Estimate cornerness
     image R = cornerness_response(S);
-    feature_normalize(R);
-    float maxr = -999999;
-    for (int i = 0; i < (R.w * R.h * R.c); i++){
-      maxr = fmax(maxr, R.data[i]);
-      /*if (R.data[i] < thresh) {*/
-        /*R.data[i] = invalid;*/
-      /*} else {*/
-        /*R.data[i] = 1000;*/
-      /*}*/
-    }
 
     // Run NMS on the responses
     image Rnms = nms_image(R, nms);
-    save_image(R, "miR");
-    save_image(Rnms, "miRnms");
 
 
     //TODO: count number of responses over threshold
