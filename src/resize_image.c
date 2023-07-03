@@ -11,8 +11,9 @@ float nn_interpolate(image im, float x, float y, int c)
     // TODO Fill in
     int xi = round(x);
     int yi = round(y);
-    int indice = index_calc(im.w, im.h, xi, yi, c);
-    return im.data[indice];
+    /*int indice = index_calc(im.w, im.h, xi, yi, c);*/
+    /*return im.data[indice];*/
+    return get_pixel(im, xi, yi, c);
 }
 
 struct lin_transf_coefs{

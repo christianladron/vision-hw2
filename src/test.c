@@ -385,30 +385,47 @@ void test_cornerness()
     free_image(gt);
 }
 
+void field_panorama(){
+    image im5 = load_image("data/field5.jpg");
+    image im6 = load_image("data/field6.jpg");
+    image im5c = cylindrical_project(im5, 1200);
+    image im6c = cylindrical_project(im6, 1200);
+    free_image(im5);
+    free_image(im6);
+    /*# pan = panorama_image(im5, im6, thresh=2, iters=50000, inlier_thresh=3)*/
+    image pan = panorama_image(im5c, im6c,2, 2,3,3,50000, 30);
+    save_image(pan, "field_panorama_1");
+    free_image(pan);
+    free_image(im5c);
+    free_image(im6c);
+}
+
 void run_tests()
 {
     //test_matrix();
-    test_get_pixel();
-    test_set_pixel();
-    test_copy();
-    test_shift();
-    test_grayscale();
-    test_rgb_to_hsv();
-    test_hsv_to_rgb();
-    test_nn_resize();
-    test_bl_resize();
-    test_multiple_resize();
-    test_gaussian_filter();
-    test_sharpen_filter();
-    test_emboss_filter();
-    test_highpass_filter();
-    test_convolution();
-    test_gaussian_blur();
-    test_hybrid_image();
-    test_frequency_image();
-    test_sobel();
-    test_structure();
-    test_cornerness();
+    //
+    /*test_get_pixel();*/
+    /*test_set_pixel();*/
+    /*test_copy();*/
+    /*test_shift();*/
+    /*test_grayscale();*/
+    /*test_rgb_to_hsv();*/
+    /*test_hsv_to_rgb();*/
+    /*test_nn_resize();*/
+    /*test_bl_resize();*/
+    /*test_multiple_resize();*/
+    /*test_gaussian_filter();*/
+    /*test_sharpen_filter();*/
+    /*test_emboss_filter();*/
+    /*test_highpass_filter();*/
+    /*test_convolution();*/
+    /*test_gaussian_blur();*/
+    /*test_hybrid_image();*/
+    /*test_frequency_image();*/
+    /*test_sobel();*/
+    /*test_structure();*/
+    /*test_cornerness();*/
+    field_panorama();
     printf("%d tests, %d passed, %d failed\n", tests_total, tests_total-tests_fail, tests_fail);
 }
 
